@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "923647975120",
+    "project_id": "salon-ecac7",
+    "storage_bucket": "salon-ecac7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923647975120:android:a03aa89c5538e9eca4c8d5",
+        "android_client_info": {
+          "package_name": "com.example.clipngo_web"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923647975120-kbfn96n59egvtosjcm3jb9fatvhbsqls.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTjD90rUpix9ZS5pLhEu72tMjH3yj_xo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923647975120-kbfn96n59egvtosjcm3jb9fatvhbsqls.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923647975120:android:7df56d56b9b5cf33a4c8d5",
+        "android_client_info": {
+          "package_name": "com.example.salon_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923647975120-kbfn96n59egvtosjcm3jb9fatvhbsqls.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTjD90rUpix9ZS5pLhEu72tMjH3yj_xo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923647975120-kbfn96n59egvtosjcm3jb9fatvhbsqls.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
