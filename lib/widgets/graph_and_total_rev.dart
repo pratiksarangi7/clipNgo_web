@@ -22,7 +22,7 @@ class _GraphAndTotalRevenueState extends State<GraphAndTotalRevenue> {
     return Row(
       children: [
         Expanded(
-          flex: 2,
+          flex: 3,
           child: MouseRegion(
             onEnter: (event) => setState(() {
               _inGraphRegion = true;
@@ -42,7 +42,7 @@ class _GraphAndTotalRevenueState extends State<GraphAndTotalRevenue> {
                             color: Colors.grey.withOpacity(0.9), // Shadow color
                             spreadRadius: 5, // How far the shadow spreads
                             blurRadius: 10, // How blurry the shadow is
-                            offset: Offset(0, 3), // Offset of the shadow
+                            offset: const Offset(0, 3), // Offset of the shadow
                           ),
                         ]
                       : [
@@ -50,7 +50,7 @@ class _GraphAndTotalRevenueState extends State<GraphAndTotalRevenue> {
                             color: Colors.grey.withOpacity(0.2), // Shadow color
                             spreadRadius: 5, // How far the shadow spreads
                             blurRadius: 10, // How blurry the shadow is
-                            offset: Offset(0, 3), // Offset of the shadow
+                            offset: const Offset(0, 3), // Offset of the shadow
                           ),
                         ]),
               height: 350,
@@ -144,13 +144,18 @@ class _GraphAndTotalRevenueState extends State<GraphAndTotalRevenue> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text(
-                        "Total Revenue",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w300),
-                      ),
+                    const Row(
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 22, bottom: 10, left: 30),
+                          child: Text(
+                            "Total Revenue",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
                     ),
                     for (int i = 0; i < 3; i++)
                       RevenueCard(

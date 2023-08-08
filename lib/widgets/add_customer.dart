@@ -14,6 +14,7 @@ class _AddCustomerState extends State<AddCustomer> {
   final _textFieldController2 = TextEditingController();
   final _textFieldController3 = TextEditingController();
   final _textFieldController4 = TextEditingController();
+  final _textFieldController5 = TextEditingController();
 
   @override
   void dispose() {
@@ -21,6 +22,7 @@ class _AddCustomerState extends State<AddCustomer> {
     _textFieldController2.dispose();
     _textFieldController3.dispose();
     _textFieldController4.dispose();
+    _textFieldController5.dispose();
     super.dispose();
   }
 
@@ -29,12 +31,16 @@ class _AddCustomerState extends State<AddCustomer> {
     String customerName = _textFieldController1.text;
     String phNo = _textFieldController2.text;
     String stylistName = _textFieldController3.text;
-    String serviceCharge = _textFieldController4.text;
+    String optedServices = _textFieldController4.text;
+    String serviceCharge = _textFieldController5.text;
+
     var newCustomer = Customer(
-        name: customerName,
-        phoneNumber: phNo,
-        assignedStylist: stylistName,
-        serviceCharge: serviceCharge);
+      name: customerName,
+      phoneNumber: phNo,
+      assignedStylist: stylistName,
+      optedServices: optedServices,
+      serviceCharge: serviceCharge,
+    );
     setState(() {
       customers.add(newCustomer);
     });
@@ -44,6 +50,7 @@ class _AddCustomerState extends State<AddCustomer> {
     _textFieldController2.clear();
     _textFieldController3.clear();
     _textFieldController4.clear();
+    _textFieldController5.clear();
   }
 
   void _showDialog() {
@@ -51,24 +58,28 @@ class _AddCustomerState extends State<AddCustomer> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter Data'),
+          title: const Text('Enter Customer details'),
           content: Column(
             children: [
               TextField(
                 controller: _textFieldController1,
-                decoration: InputDecoration(labelText: 'Field 1'),
+                decoration: const InputDecoration(labelText: 'Customer name: '),
               ),
               TextField(
                 controller: _textFieldController2,
-                decoration: InputDecoration(labelText: 'Field 2'),
+                decoration: const InputDecoration(labelText: 'Phone number: '),
               ),
               TextField(
                 controller: _textFieldController3,
-                decoration: InputDecoration(labelText: 'Field 3'),
+                decoration: const InputDecoration(labelText: 'Field 3'),
               ),
               TextField(
                 controller: _textFieldController4,
-                decoration: InputDecoration(labelText: 'Field 4'),
+                decoration: const InputDecoration(labelText: 'Field 4'),
+              ),
+              TextField(
+                controller: _textFieldController4,
+                decoration: const InputDecoration(labelText: 'Field 4'),
               ),
             ],
           ),

@@ -54,12 +54,18 @@ class _CustomerDataTableState extends State<CustomerDataTable> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Current customers",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(fontSize: 18)),
-                AddCustomer(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, bottom: 20),
+                  child: Text("Current customers",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontSize: 18)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: const AddCustomer(),
+                ),
               ],
             ),
             DataTable(
@@ -67,7 +73,7 @@ class _CustomerDataTableState extends State<CustomerDataTable> {
               columns: const [
                 DataColumn(
                     label: Text(
-                  'Customer Name',
+                  'Customer',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                 )),
                 DataColumn(
@@ -78,7 +84,7 @@ class _CustomerDataTableState extends State<CustomerDataTable> {
                 ),
                 DataColumn(
                   label: Text(
-                    'Assigned Stylist',
+                    'Opted services',
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -92,7 +98,21 @@ class _CustomerDataTableState extends State<CustomerDataTable> {
               rows: List.generate(customers.length, (index) {
                 return DataRow(
                   cells: [
-                    DataCell(Text(customers[index].name)),
+                    DataCell(Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          customers[index].name,
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          customers[index].assignedStylist,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 12),
+                        )
+                      ],
+                    )),
                     DataCell(Text(customers[index].phoneNumber)),
                     DataCell(Text(customers[index].assignedStylist)),
                     DataCell(Text(

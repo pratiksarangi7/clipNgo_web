@@ -1,3 +1,4 @@
+import 'package:clipngo_web/screens/log_in.dart';
 import 'package:clipngo_web/screens/split_view.dart';
 import 'package:clipngo_web/widgets/app_menu.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,9 +34,7 @@ class MyApp extends StatelessWidget {
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
         }),
       ),
-      home: const SplitView(
-        menu: AppMenu(),
-      ),
+      home: const LogInScreen(),
     );
   }
 }

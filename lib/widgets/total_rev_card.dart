@@ -15,7 +15,7 @@ class RevenueCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10), // Add rounded corners
       ),
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(18),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -29,7 +29,7 @@ class RevenueCard extends StatelessWidget {
               const IconData(0xf05db,
                   fontFamily:
                       'MaterialIcons'), // Suitable icon (you can change this)
-              size: 37,
+              size: 32,
               color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
             ),
           ),
@@ -40,7 +40,7 @@ class RevenueCard extends StatelessWidget {
               Text(
                 "₹$revData/-", // Convert revData to a string
                 style: const TextStyle(
-                  fontSize: 27,
+                  fontSize: 21,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -48,7 +48,7 @@ class RevenueCard extends StatelessWidget {
               Text(
                 text,
                 style: TextStyle(
-                    fontSize: 16, color: Colors.black.withOpacity(0.8)),
+                    fontSize: 14, color: Colors.black.withOpacity(0.8)),
               ),
             ],
           ),
