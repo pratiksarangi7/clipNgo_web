@@ -10,9 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SplitView extends ConsumerWidget {
   const SplitView({
     Key? key,
-    // menu and content are now configurable
+    // menu takes the AppMenu() widget as argument when SplitView called
     required this.menu,
-    // these values are now configurable with sensible default values
     this.breakpoint = 600,
     this.menuWidth = 240,
   }) : super(key: key);
