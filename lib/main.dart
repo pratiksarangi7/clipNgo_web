@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
         }),
       ),
-      home: const AuthScreen(),
+      home: const SplitView(
+        menu: AppMenu(),
+      ),
     );
   }
 }

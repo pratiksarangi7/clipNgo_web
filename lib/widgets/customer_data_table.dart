@@ -114,7 +114,7 @@ class _CustomerDataTableState extends State<CustomerDataTable> {
                       ],
                     )),
                     DataCell(Text(customers[index].phoneNumber)),
-                    DataCell(Text(customers[index].assignedStylist)),
+                    DataCell(Text(customers[index].optedServices)),
                     DataCell(Text(
                       "       ₹${customers[index].serviceCharge}",
                     )),

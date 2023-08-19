@@ -1,38 +1,50 @@
 import 'package:clipngo_web/data/customer_data.dart';
+import 'package:clipngo_web/providers/selected_stylist_provider.dart';
+import 'package:clipngo_web/widgets/select_stylist.dart';
 import 'package:flutter/material.dart';
+import 'package:clipngo_web/widgets/opted_services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:clipngo_web/providers/selected_services_provider.dart';
+import 'package:clipngo_web/providers/total_cost_provider.dart';
 
-class AddCustomer extends StatefulWidget {
+class AddCustomer extends ConsumerStatefulWidget {
   const AddCustomer({super.key});
   @override
-  State<AddCustomer> createState() {
+  ConsumerState<AddCustomer> createState() {
     return _AddCustomerState();
   }
 }
 
-class _AddCustomerState extends State<AddCustomer> {
+class _AddCustomerState extends ConsumerState<AddCustomer> {
   final _textFieldController1 = TextEditingController();
   final _textFieldController2 = TextEditingController();
   final _textFieldController3 = TextEditingController();
-  final _textFieldController4 = TextEditingController();
-  final _textFieldController5 = TextEditingController();
+
+  String _selectedStylist = "Selected Stylist";
 
   @override
   void dispose() {
     _textFieldController1.dispose();
     _textFieldController2.dispose();
     _textFieldController3.dispose();
-    _textFieldController4.dispose();
-    _textFieldController5.dispose();
     super.dispose();
   }
 
   void _saveData() {
+    String _optedServices = "";
+    final _optedServicesList = ref.read(selectedServicesProvider);
+    final totalCost = ref.read(totalCostProvider);
+    for (final service in _optedServicesList) {
+      _optedServices += "$service\n";
+    }
     // Retrieve the entered data from the text fields
     String customerName = _textFieldController1.text;
     String phNo = _textFieldController2.text;
-    String stylistName = _textFieldController3.text;
-    String optedServices = _textFieldController4.text;
-    String serviceCharge = _textFieldController5.text;
+    double discountAmount = double.tryParse(_textFieldController3.text) ?? 0.0;
+    String stylistName = ref.read(stylistProvider);
+    String optedServices = _optedServices;
+    // print(totalCost);
+    String serviceCharge = (totalCost - discountAmount).toString();
 
     var newCustomer = Customer(
       name: customerName,
@@ -49,8 +61,9 @@ class _AddCustomerState extends State<AddCustomer> {
     _textFieldController1.clear();
     _textFieldController2.clear();
     _textFieldController3.clear();
-    _textFieldController4.clear();
-    _textFieldController5.clear();
+
+    _optedServicesList.clear();
+    ref.invalidate(totalCostProvider);
   }
 
   void _showDialog() {
@@ -59,29 +72,58 @@ class _AddCustomerState extends State<AddCustomer> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Enter Customer details'),
-          content: Column(
-            children: [
-              TextField(
-                controller: _textFieldController1,
-                decoration: const InputDecoration(labelText: 'Customer name: '),
-              ),
-              TextField(
-                controller: _textFieldController2,
-                decoration: const InputDecoration(labelText: 'Phone number: '),
-              ),
-              TextField(
-                controller: _textFieldController3,
-                decoration: const InputDecoration(labelText: 'Field 3'),
-              ),
-              TextField(
-                controller: _textFieldController4,
-                decoration: const InputDecoration(labelText: 'Field 4'),
-              ),
-              TextField(
-                controller: _textFieldController4,
-                decoration: const InputDecoration(labelText: 'Field 4'),
-              ),
-            ],
+          content: Container(
+            width: 500,
+            height: 600,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _textFieldController1,
+                        decoration: const InputDecoration(
+                          labelText: 'Customer name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _textFieldController2,
+                        decoration: const InputDecoration(
+                          labelText: 'Phone number',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // insert select_stylist widget
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SelectStylist(),
+                    const OptedServices(),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                ),
+                TextField(
+                  controller: _textFieldController3,
+                  decoration:
+                      const InputDecoration(labelText: 'Discount Amount'),
+                ),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
