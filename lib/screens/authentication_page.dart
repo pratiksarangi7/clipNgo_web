@@ -1,3 +1,4 @@
+import 'package:clipngo_web/providers/login_or_register.dart';
 import 'package:clipngo_web/screens/part_screens/log_in.dart';
 import 'package:clipngo_web/screens/part_screens/register.dart';
 import 'package:flutter/material.dart';

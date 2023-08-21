@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+final cloud = FirebaseFirestore.instance;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -10,9 +15,14 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   // this key is used to manage the state of a form:
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    const textFormFieldStyle = TextStyle(fontSize: 22);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 70, horizontal: 120),
       child: Form(
@@ -21,11 +31,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             const Text("Register yourself"),
             const SizedBox(height: 20),
+            TextFormField(
+              controller: _nameController,
+              style: textFormFieldStyle,
+              decoration: const InputDecoration(
+                hintText: 'Enter your salon\'s name',
+              ),
+            ),
             // Mobile Number
             TextFormField(
+              controller: _phoneNumberController,
+              style: textFormFieldStyle,
               decoration: const InputDecoration(
-                labelText: 'Mobile Number',
-                hintText: 'Enter your mobile number',
+                hintText: 'Enter your official mobile number',
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -42,34 +60,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             // Valid Email Address
             TextFormField(
+              controller: _emailController,
+              style: textFormFieldStyle,
               decoration: const InputDecoration(
-                labelText: 'Valid Email Address',
                 hintText: 'Enter a valid email address',
               ),
-              validator: (value) {
-                // Perform your validation logic here
-                return null; // Return null if input is valid
-              },
+              // validator: (value) {
+              //   if (value == null) return "Field can't be empty";
+              //   if (!RegExp(r'@').hasMatch(value))
+              //     return "Enter a valid email address";
+              //   return null; // Return null if input is valid
+              // },
             ),
             // Salon Address
             TextFormField(
+              style: textFormFieldStyle,
               decoration: const InputDecoration(
-                labelText: 'Salon Address',
-                hintText: 'Enter the salon address',
+                hintText: 'Enter your salon\'s address',
               ),
               validator: (value) {
                 // Perform your validation logic here
                 return null; // Return null if input is valid
               },
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  // Form is valid, perform submission logic here
-                }
-              },
-              child: const Text('Submit'),
-            ),
+            TextButton.icon(
+              icon: const Icon(Icons.location_on),
+                onPressed: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapScreen(
+                      onLocationSelected: (LatLng location) {
+                        setState(() {
+                          _selectedLocation = location;
+                        });
+
+                },
+                icon: const Icon(Icons.location_on),
+                label: const Text("Pick your location"))
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:clipngo_web/providers/login_or_register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,6 +11,24 @@ class LogInScreen extends ConsumerStatefulWidget {
 }
 
 class _LogInScreenState extends ConsumerState<LogInScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  var showCircularProgressIndicator = false;
+
+  Future<void> validateUser() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+      ref.read(isLoggedInProvider.notifier).state = 1;
+      print("Logged in successfully");
+    } catch (e) {
+      print("email:${_emailController.text}");
+      print("pass: ${_passwordController.text}");
+      print("Invalid entries");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,18 +42,20 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
           const SizedBox(
             height: 50,
           ),
-          const TextField(
-            style: TextStyle(fontSize: 22),
-            decoration: InputDecoration(
-                hintText: "Enter your admin ID",
+          TextField(
+            controller: _emailController,
+            style: const TextStyle(fontSize: 22),
+            decoration: const InputDecoration(
+                hintText: "Enter your clipNgo ID",
                 prefixIcon: Icon(Icons.person_outline)),
           ),
           const SizedBox(
             height: 50,
           ),
-          const TextField(
-            style: TextStyle(fontSize: 22),
-            decoration: InputDecoration(
+          TextField(
+            controller: _passwordController,
+            style: const TextStyle(fontSize: 22),
+            decoration: const InputDecoration(
                 hintText: "Enter your password", prefixIcon: Icon(Icons.lock)),
           ),
           const SizedBox(
@@ -56,12 +77,21 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary),
-                onPressed: () {},
-                child: Text(
-                  "Login",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                )),
+                onPressed: () {
+                  setState(() {
+                    showCircularProgressIndicator = true;
+                  });
+                  validateUser();
+                },
+                child: showCircularProgressIndicator
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : Text(
+                        "Login",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      )),
           ),
           const SizedBox(
             height: 15,

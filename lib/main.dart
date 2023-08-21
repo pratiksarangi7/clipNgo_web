@@ -1,3 +1,4 @@
+import 'package:clipngo_web/providers/login_or_register.dart';
 import 'package:clipngo_web/screens/authentication_page.dart';
 import 'package:clipngo_web/screens/split_view.dart';
 import 'package:clipngo_web/widgets/app_menu.dart';
@@ -14,12 +15,13 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isloggedIn = ref.watch(isLoggedInProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Dash",
@@ -34,7 +36,9 @@ class MyApp extends StatelessWidget {
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
         }),
       ),
-      home: const AuthScreen(),
+      home: isloggedIn == 1
+          ? const SplitView(menu: AppMenu())
+          : const AuthScreen(),
     );
   }
 }

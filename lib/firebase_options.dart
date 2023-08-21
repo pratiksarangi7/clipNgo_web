@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAf6V4NrlxiY1EqK_b4MTTeNHTnLaNOfW8',
-    appId: '1:923647975120:web:9e70539fe71e7616a4c8d5',
+    appId: '1:923647975120:web:a003ef615eb043d9a4c8d5',
     messagingSenderId: '923647975120',
     projectId: 'salon-ecac7',
     authDomain: 'salon-ecac7.firebaseapp.com',
