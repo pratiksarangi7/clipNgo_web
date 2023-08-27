@@ -60,7 +60,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Select kar bsdk'),
+                const Text('Click on the screen to move the marker'),
                 SizedBox(
                   height: 500,
                   width: 800,
