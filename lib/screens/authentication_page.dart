@@ -24,7 +24,7 @@ class AuthScreen extends StatelessWidget {
                       fit: BoxFit.cover),
                 ),
               )),
-          const Expanded(flex: 1, child: RegisterScreen()),
+          const Expanded(flex: 1, child: LogInScreen()),
         ],
       ),
     );

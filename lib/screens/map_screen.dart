@@ -1,57 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart' as latlng;
-import 'package:mapbox_gl/mapbox_gl.dart' hide LatLng;
+import 'package:flutter_map/plugin_api.dart';
+import 'package:latlong2/latlong.dart';
 
 class MapScreen extends StatefulWidget {
-  final Function(latlng.LatLng latlng) onLocationSelected;
-
-  const MapScreen({super.key, required this.onLocationSelected});
-
+  const MapScreen(
+      {super.key, required this.myLatitude, required this.myLongitude});
+  final double myLatitude;
+  final double myLongitude;
   @override
-  _MapScreenState createState() => _MapScreenState();
+  State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  late MapboxMapController _mapController;
-  late latlng.LatLng _selectedLocation;
+  LatLng? _selectedLocation;
+  var _finalLatitude;
+  var _finalLongitude;
+
+  void handleTap(LatLng latLng) {
+    setState(
+      () {
+        _selectedLocation = latLng;
+        _finalLatitude = _selectedLocation!.latitude;
+        _finalLongitude = _selectedLocation!.longitude;
+        print("The latitude is: $_finalLatitude");
+        print("The longitude is: $_finalLongitude");
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    _finalLatitude = widget.myLatitude;
+    _finalLongitude = widget.myLongitude;
+    print("The latitude is: $_finalLatitude");
+    print("The longitude is: $_finalLongitude");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select Location'),
-      ),
-      body: MapboxMap(
-        initialCameraPosition: CameraPosition(
-          target: latlng.LatLng,
-          zoom: 10.0,
+    return GestureDetector(
+      child: FlutterMap(
+        options: MapOptions(
+          // center: LatLng(widget.myLatitude, widget.myLongitude),
+          center: LatLng(widget.myLatitude, widget.myLongitude),
+          zoom: 16,
+          maxZoom: 18,
+          onTap: (_, LatLng latLng) {
+            handleTap(latLng);
+          },
         ),
-        accessToken: '<YOUR_ACCESS_TOKEN>',
-        onMapCreated: (controller) {
-          _mapController = controller;
-        },
-        onTap: (latlng.LatLng location) {
-          setState(() {
-            _selectedLocation = location;
-          });
-        },
-        markers: _selectedLocation != null
-            ? Set<Marker>.from([
-                Marker(
-                  markerId: MarkerId('selected_location'),
-                  position: _selectedLocation,
+        children: [
+          TileLayer(
+            urlTemplate:
+                'https://api.mapbox.com/styles/v1/bytebuilders/clllthx6501f601phhv8s1f2w/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYnl0ZWJ1aWxkZXJzIiwiYSI6ImNsbGtwdDI4cTB5c2czZnBheWRvc21yczEifQ.fbPEIx1XlNGrznz-pC6wng',
+            userAgentPackageName: 'com.example.app',
+            additionalOptions: const {
+              'accessToken':
+                  'pk.eyJ1IjoiYnl0ZWJ1aWxkZXJzIiwiYSI6ImNsbGtwdDI4cTB5c2czZnBheWRvc21yczEifQ.fbPEIx1XlNGrznz-pC6wng',
+              'id': 'mapbox.mapbox-streets-v8',
+            },
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                width: 40.0,
+                height: 40.0,
+                point: (_selectedLocation == null)
+                    ? LatLng(widget.myLatitude, widget.myLongitude)
+                    : _selectedLocation!,
+                builder: (ctx) => const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
                 ),
-              ])
-            : null,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_selectedLocation != null) {
-            widget.onLocationSelected(_selectedLocation);
-            Navigator.pop(context);
-          }
-        },
-        child: const Icon(Icons.check),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

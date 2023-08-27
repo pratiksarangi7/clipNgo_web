@@ -83,21 +83,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 return null; // Return null if input is valid
               },
             ),
-            TextButton.icon(
-              icon: const Icon(Icons.location_on),
-                onPressed: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MapScreen(
-                      onLocationSelected: (LatLng location) {
-                        setState(() {
-                          _selectedLocation = location;
-                        });
+            // TextButton.icon(
+            //   icon: const Icon(Icons.location_on),
+            //     onPressed: () {
+            //       Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => MapScreen(
+            //           onLocationSelected: (LatLng location) {
+            //             setState(() {
+            //               _selectedLocation = location;
+            //             });
 
-                },
-                icon: const Icon(Icons.location_on),
-                label: const Text("Pick your location"))
+            // },
+            // icon: const Icon(Icons.location_on),
+            // label: const Text("Pick your location"))
           ],
         ),
       ),
