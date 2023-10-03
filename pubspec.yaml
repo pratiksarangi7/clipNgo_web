@@ -49,6 +49,7 @@ dependencies:
   geocoding: ^2.1.0
   geocode: ^1.0.3
   mapbox_search: ^3.2.0
+  flutter_widget_from_html: ^0.10.5+3
 
 dependency_overrides:
   http: ^1.0.0
