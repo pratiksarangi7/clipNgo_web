@@ -30,16 +30,16 @@ class AppMenu extends ConsumerWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(12),
-          child: Row(children: [
-            Container(
+          child: const Row(children: [
+            SizedBox(
               height: 26,
               width: 26,
               //child: Image.asset('lib/assets/images/clipNgoLogo.png'),
             ),
-            const SizedBox(
+            SizedBox(
               width: 5,
             ),
-            const Text(
+            Text(
               "ClipN'Go",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             )

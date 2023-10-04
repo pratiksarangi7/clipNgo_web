@@ -20,7 +20,7 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
   final _textFieldController2 = TextEditingController();
   final _textFieldController3 = TextEditingController();
 
-  String _selectedStylist = "Selected Stylist";
+  final String _selectedStylist = "Selected Stylist";
 
   @override
   void dispose() {
@@ -31,18 +31,18 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
   }
 
   void _saveData() {
-    String _optedServices = "";
-    final _optedServicesList = ref.read(selectedServicesProvider);
+    String optedServices0 = "";
+    final optedServicesList = ref.read(selectedServicesProvider);
     final totalCost = ref.read(totalCostProvider);
-    for (final service in _optedServicesList) {
-      _optedServices += "$service\n";
+    for (final service in optedServicesList) {
+      optedServices0 += "$service\n";
     }
     // Retrieve the entered data from the text fields
     String customerName = _textFieldController1.text;
     String phNo = _textFieldController2.text;
     double discountAmount = double.tryParse(_textFieldController3.text) ?? 0.0;
     String stylistName = ref.read(stylistProvider);
-    String optedServices = _optedServices;
+    String optedServices = optedServices0;
     // print(totalCost);
     String serviceCharge = (totalCost - discountAmount).toString();
 
@@ -62,7 +62,7 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
     _textFieldController2.clear();
     _textFieldController3.clear();
 
-    _optedServicesList.clear();
+    optedServicesList.clear();
     ref.invalidate(totalCostProvider);
   }
 
@@ -72,7 +72,7 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Enter Customer details'),
-          content: Container(
+          content: SizedBox(
             width: 500,
             height: 600,
             child: Column(
@@ -127,8 +127,8 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Save'),
               onPressed: _saveData,
+              child: const Text('Save'),
             ),
           ],
         );

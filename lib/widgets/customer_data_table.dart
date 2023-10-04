@@ -62,9 +62,9 @@ class _CustomerDataTableState extends State<CustomerDataTable> {
                           .titleLarge!
                           .copyWith(fontSize: 18)),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: const AddCustomer(),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: AddCustomer(),
                 ),
               ],
             ),

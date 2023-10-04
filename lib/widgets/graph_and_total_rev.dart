@@ -84,14 +84,14 @@ class _GraphAndTotalRevenueState extends State<GraphAndTotalRevenue> {
                     // The red line
                     LineChartBarData(
                       spots: dummyData1,
-                      dotData: FlDotData(show: false),
+                      dotData: const FlDotData(show: false),
                       isCurved: true,
                       barWidth: 2,
                       color: Colors.indigo,
                     ),
                     // The orange line
                     LineChartBarData(
-                      dotData: FlDotData(show: false),
+                      dotData: const FlDotData(show: false),
                       spots: dummyData2,
                       isCurved: true,
                       barWidth: 2,

@@ -26,7 +26,7 @@ class _OptedServicesState extends ConsumerState<OptedServices> {
     "Facial": 600,
   };
   // String _selectedService = "Select Services";
-  late Map<String, bool> _isSelected = {};
+  late final Map<String, bool> _isSelected = {};
   // double _totalCost = 0;
 
   @override
@@ -39,8 +39,8 @@ class _OptedServicesState extends ConsumerState<OptedServices> {
 
   @override
   Widget build(BuildContext context) {
-    final _selectedServices = ref.read(selectedServicesProvider);
-    print(_selectedServices);
+    final selectedServices = ref.read(selectedServicesProvider);
+    print(selectedServices);
     return DropdownButton(
       value: dummyServices[0],
       items: dummyServices.map((service) {

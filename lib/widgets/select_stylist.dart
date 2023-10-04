@@ -14,11 +14,11 @@ class SelectStylist extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _selectedStylist = ref.watch(stylistProvider);
+    final selectedStylist = ref.watch(stylistProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: DropdownButton(
-        value: _selectedStylist,
+        value: selectedStylist,
         items: dummyStylists.map((stylist) {
           return DropdownMenuItem(
             value: stylist,

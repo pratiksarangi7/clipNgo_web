@@ -8,7 +8,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("building profile screen");
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
           .collection('email-salons')
