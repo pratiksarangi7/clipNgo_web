@@ -16,6 +16,7 @@ class LogInScreen extends ConsumerStatefulWidget {
 
 class _LogInScreenState extends ConsumerState<LogInScreen> {
   final _emailController = TextEditingController();
+  final _salonNameController = TextEditingController();
   final _passwordController = TextEditingController();
   var showCircularProgressIndicator = false;
   final _registrationEmailController = TextEditingController();
@@ -44,7 +45,8 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
       final pendingRegistrations =
           FirebaseFirestore.instance.collection('pending-registrations');
       await pendingRegistrations.add({
-        'name': _registrationEmailController.text.trim(),
+        'email': _registrationEmailController.text.trim(),
+        'name': _salonNameController.text.trim(),
         'address': _addressController.text.trim(),
         'latitude': _latitude.toString(),
         'longitude': _longitude.toString(),
@@ -159,6 +161,15 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
           const SizedBox(
             height: 50,
           ),
+          if (loginOrRegister == 'register')
+            TextField(
+              controller: _salonNameController,
+              style: const TextStyle(fontSize: 22),
+              decoration: const InputDecoration(
+                hintText: "Enter salon name",
+                prefixIcon: Icon(Icons.storefront),
+              ),
+            ),
           loginOrRegister == 'login'
               ? TextField(
                   controller: _passwordController,

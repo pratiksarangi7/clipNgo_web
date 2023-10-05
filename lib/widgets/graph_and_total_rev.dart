@@ -1,11 +1,24 @@
 import 'package:clipngo_web/data/dummy_data.dart';
 import 'package:clipngo_web/data/titles_data.dart';
+import 'package:clipngo_web/providers/salon_id_provider.dart';
 import 'package:clipngo_web/widgets/total_rev_card.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 var bottomNames = ["today's", "last 7 days", " last 30 days"];
-var values = [20000, 230000, 500000];
+final valuesProvider = FutureProvider<List<int>>((ref) async {
+  final documentId = ref.read(idProvider);
+  final snapshot = await FirebaseFirestore.instance
+      .collection('email-salons')
+      .doc(documentId)
+      .get();
+  final monthlyIncome = snapshot.get('monthlyIncome') as int;
+  final todayIncome = snapshot.get('todayIncome') as int;
+  final weekIncome = snapshot.get('weekIncome') as int;
+  return [monthlyIncome, todayIncome, weekIncome];
+});
 
 class GraphAndTotalRevenue extends StatefulWidget {
   const GraphAndTotalRevenue({super.key});
@@ -141,28 +154,33 @@ class _GraphAndTotalRevenueState extends State<GraphAndTotalRevenue> {
               ),
               height: 350,
               padding: const EdgeInsets.all(20),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 22, bottom: 10, left: 30),
-                          child: Text(
-                            "Total Revenue",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
+              child: Consumer(builder: (context, ref, _) {
+                final values =
+                    ref.watch(valuesProvider).asData?.value ?? [0, 0, 0];
+                values.sort();
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: 22, bottom: 10, left: 30),
+                            child: Text(
+                              "Total Revenue",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    for (int i = 0; i < 3; i++)
-                      RevenueCard(
-                        revData: values[i],
-                        text: bottomNames[i],
-                      )
-                  ]),
+                        ],
+                      ),
+                      for (int i = 0; i < 3; i++)
+                        RevenueCard(
+                          revData: values[i],
+                          text: bottomNames[i],
+                        )
+                    ]);
+              }),
             ),
           ),
         ),

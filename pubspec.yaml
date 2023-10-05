@@ -50,6 +50,11 @@ dependencies:
   geocode: ^1.0.3
   mapbox_search: ^3.2.0
   flutter_widget_from_html: ^0.10.5+3
+  firebase_storage: ^11.2.8
+  image_picker: ^1.0.4
+  image_picker_for_web: ^3.0.1
+  image_picker_web: ^3.1.1
+  file_picker: ^5.5.0
 
 dependency_overrides:
   http: ^1.0.0
