@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:clipngo_web/providers/salon_id_provider.dart';
+import 'package:clipngo_web/widgets/services_checkbox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +139,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   child: HtmlWidget("<img src=$image>"),
                 ),
               ),
+            const ServiceList()
           ],
         );
       },
