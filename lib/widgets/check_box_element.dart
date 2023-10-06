@@ -23,7 +23,6 @@ class _CheckBoxElementState extends ConsumerState<CheckBoxElement> {
   @override
   Widget build(BuildContext context) {
     final seletedServices = ref.watch(selectedServicesProvider);
-    double totalExpenses = ref.watch(totalCostProvider);
     return Checkbox(
       value: widget.onSelected[widget.currentService],
       onChanged: (value) {

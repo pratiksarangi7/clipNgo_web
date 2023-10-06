@@ -20,8 +20,6 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
   final _textFieldController2 = TextEditingController();
   final _textFieldController3 = TextEditingController();
 
-  final String _selectedStylist = "Selected Stylist";
-
   @override
   void dispose() {
     _textFieldController1.dispose();

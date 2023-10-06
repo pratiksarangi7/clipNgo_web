@@ -11,7 +11,7 @@ import 'dart:convert';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
@@ -20,6 +20,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Uint8List? _bytesData;
   String _fileName = '';
+  final _capacityController = TextEditingController();
 
   startWebFilePicker() async {
     html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
@@ -42,6 +43,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       });
       reader.readAsDataUrl(file);
     });
+  }
+
+  void _saveCapacity() {
+    final documentId = ref.read(idProvider);
+    final capacity = _capacityController.text;
+    FirebaseFirestore.instance
+        .collection('email-salons')
+        .doc(documentId)
+        .update({'capacity': capacity})
+        .then((value) => print("Capacity saved"))
+        .catchError((error) => print("Failed to save capacity: $error"));
   }
 
   uploadFile() async {
@@ -88,8 +100,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         // String phoneNumber = documentData['number'];
         String emailId = documentData['email'];
         String address = documentData['address'];
-        String image = documentData['image'];
+        String? image = documentData['image'];
+        String? capacity = documentData['capacity'];
         List<dynamic>? stylists = documentData['stylists'];
+
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 35),
           child: Row(
@@ -129,7 +143,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           .copyWith(fontSize: 22),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
@@ -143,32 +156,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const ServiceList(),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      'Stylists: ',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 19),
-                    ),
-                  ),
-                  if (stylists != null)
-                    for (var stylist in stylists)
-                      Text(
-                        stylist.toString(),
+              SizedBox(
+                width: 270,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        'Stylists: ',
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
                             .copyWith(fontSize: 19),
                       ),
-                ],
+                    ),
+                    if (stylists != null)
+                      for (var stylist in stylists)
+                        Text(
+                          stylist.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 19),
+                        ),
+                    if (stylists == null) const AddStylist(),
+                    if (capacity == null)
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                            width: 80,
+                            child: TextField(
+                              controller: _capacityController,
+                              decoration: const InputDecoration(
+                                labelText: 'Capacity',
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: _saveCapacity,
+                            child: const Text('Save'),
+                          ),
+                        ],
+                      ),
+                    if (capacity != null)
+                      Text(
+                        'Capacity: $capacity',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontSize: 19),
+                      ),
+                  ],
+                ),
               ),
-              if (stylists == null) const AddStylist(),
-              if (image == 'null')
+              if (image == null)
                 Column(
                   children: [
                     const Text('Let\'s upload Image'),
@@ -202,13 +245,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               else
                 SizedBox(
                   height: 400,
+                  width: 200,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1,
-                      ),
                     ),
                     child: HtmlWidget("<img src=$image>"),
                   ),

@@ -12,7 +12,6 @@ class Service {
 }
 
 Future<void> saveServices(List<Service> services, String id) async {
-  print('starting save services');
   final collectionRef = FirebaseFirestore.instance.collection('email-salons');
   final providerDocRef = collectionRef.doc(id);
   final servicesCollectionRef = providerDocRef.collection('services');
@@ -25,7 +24,6 @@ Future<void> saveServices(List<Service> services, String id) async {
       });
     }
   }
-  print('services saved');
 }
 
 class ServiceList extends ConsumerStatefulWidget {

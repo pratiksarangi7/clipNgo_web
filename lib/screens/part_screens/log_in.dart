@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clipngo_web/screens/map_screen.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:clipngo_web/providers/salon_id_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
@@ -42,15 +43,23 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
 
   Future<void> registerUser() async {
     try {
-      final pendingRegistrations =
-          FirebaseFirestore.instance.collection('pending-registrations');
-      await pendingRegistrations.add({
-        'email': _registrationEmailController.text.trim(),
-        'name': _salonNameController.text.trim(),
-        'address': _addressController.text.trim(),
-        'latitude': _latitude.toString(),
-        'longitude': _longitude.toString(),
-      });
+      var email = _registrationEmailController.text.trim();
+      var documentId = "${email.split('@')[0]}@clipngo.com";
+      FirebaseFirestore.instance
+          .collection('email-salons')
+          .doc(documentId)
+          .set({
+            'email': email,
+            'name': _salonNameController.text.trim(),
+            'address': _addressController.text.trim(),
+            'latitude': _latitude.toString(),
+            'longitude': _longitude.toString(),
+            'id': const Uuid().v4(),
+            'nameLower': _salonNameController.text.trim().toLowerCase(),
+            // add any other data you want to store in the document
+          })
+          .then((value) => print("Document added"))
+          .catchError((error) => print("Failed to add document: $error"));
       setState(() {
         showCircularProgressIndicator = false;
       });
