@@ -60,12 +60,19 @@ class _ServiceListState extends ConsumerState<ServiceList> {
         if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           final services = snapshot.data!.docs;
           return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ...services
                     .map(
-                      (service) => Text(
-                        '${service['name']}: ${service['price']}',
+                      (service) => Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          '${service['name']}: ${service['price']}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 20),
+                        ),
                       ),
                     )
                     .toList(),

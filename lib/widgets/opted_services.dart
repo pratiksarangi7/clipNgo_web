@@ -2,6 +2,8 @@ import 'package:clipngo_web/providers/selected_services_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:clipngo_web/widgets/check_box_element.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:clipngo_web/providers/salon_id_provider.dart';
 
 class OptedServices extends ConsumerStatefulWidget {
   const OptedServices({
@@ -13,58 +15,76 @@ class OptedServices extends ConsumerStatefulWidget {
 }
 
 class _OptedServicesState extends ConsumerState<OptedServices> {
-  List<String> dummyServices = [
-    "Select Services",
-    "Haircut",
-    "HairSpa",
-    "Facial"
-  ];
-  Map<String, double> dummyServiceCharges = {
-    "Select Services": 0,
-    "Haircut": 150,
-    "HairSpa": 500,
-    "Facial": 600,
-  };
-  // String _selectedService = "Select Services";
+  late List<String> services;
+  late Map<String, double> serviceCharges;
   late final Map<String, bool> _isSelected = {};
-  // double _totalCost = 0;
 
   @override
   void initState() {
     super.initState();
-    for (String service in dummyServices) {
-      _isSelected[service] = false;
-    }
+    services = ["Select Services"];
+    serviceCharges = {"Select Services": 0};
+    _isSelected["Select Services"] = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedServices = ref.read(selectedServicesProvider);
-    print(selectedServices);
-    return DropdownButton(
-      value: dummyServices[0],
-      items: dummyServices.map((service) {
-        return DropdownMenuItem(
-          enabled: false,
-          value: service,
-          child: Expanded(
-            child: service != "Select Services"
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("$service (₹${dummyServiceCharges[service]})"),
-                      CheckBoxElement(
-                        currentService: service,
-                        onSelected: _isSelected,
-                        serviceCharges: dummyServiceCharges,
-                      ),
-                    ],
-                  )
-                : Text(service),
-          ),
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('email-salons')
+          .doc(ref.read(idProvider))
+          .collection('services')
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Text('No services found');
+        }
+        // Services data is available here
+        final servicesData = snapshot.data!.docs;
+        print(servicesData);
+        services = ["Select Services"];
+        serviceCharges = {"Select Services": 0};
+        _isSelected["Select Services"] = false;
+        for (var serviceData in servicesData) {
+          final serviceName = serviceData['name'];
+          final servicePrice = serviceData['price'];
+          services.add(serviceName);
+          serviceCharges[serviceName] = servicePrice;
+          _isSelected[serviceName] = false;
+        }
+        // final selectedServices = ref.read(selectedServicesProvider);
+        return DropdownButton(
+          value: services[0],
+          items: services.map((service) {
+            return DropdownMenuItem(
+              enabled: false,
+              value: service,
+              child: Expanded(
+                child: service != "Select Services"
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("$service (₹${serviceCharges[service]})"),
+                          CheckBoxElement(
+                            currentService: service,
+                            onSelected: _isSelected,
+                            serviceCharges: serviceCharges,
+                          ),
+                        ],
+                      )
+                    : Text(service),
+              ),
+            );
+          }).toList(),
+          onChanged: (_) {},
         );
-      }).toList(),
-      onChanged: (_) {},
+      },
     );
   }
 }

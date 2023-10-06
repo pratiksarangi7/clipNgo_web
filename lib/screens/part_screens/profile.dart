@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:clipngo_web/providers/salon_id_provider.dart';
+import 'package:clipngo_web/widgets/add_stylist.dart';
 import 'package:clipngo_web/widgets/services_checkbox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -88,59 +89,132 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         String emailId = documentData['email'];
         String address = documentData['address'];
         String image = documentData['image'];
-        return Column(
-          children: [
-            Text('Name: $name'),
-            // Text('Phone Number: $phoneNumber'),
-            Text('Email ID: $emailId'),
-            Text('Address: $address'),
-            if (image == 'null')
+        List<dynamic>? stylists = documentData['stylists'];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 35),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Let\'s upload Image'),
-                  const SizedBox(height: 20),
-                  MaterialButton(
-                    color: Colors.pink,
-                    elevation: 8,
-                    highlightElevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    textColor: Colors.white,
-                    child: const Text("Select Photo"),
-                    onPressed: () {
-                      startWebFilePicker();
-                    },
-                  ),
-                  const Divider(
-                    color: Colors.teal,
-                  ),
-                  _bytesData != null
-                      ? Image.memory(_bytesData!, width: 400, height: 400)
-                      : Container(),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await uploadFile();
-                    },
-                    child: const Text('Upload Photo'),
-                  ),
-                ],
-              )
-            else
-              SizedBox(
-                height: 400,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1,
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      'Name: $name',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 22),
                     ),
                   ),
-                  child: HtmlWidget("<img src=$image>"),
-                ),
+                  // Text('Phone Number: $phoneNumber'),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      'Email ID: $emailId',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 22),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      'Address: $address',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 22),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      'Services: ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 19),
+                    ),
+                  ),
+                  const ServiceList(),
+                ],
               ),
-            const ServiceList()
-          ],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      'Stylists: ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontSize: 19),
+                    ),
+                  ),
+                  if (stylists != null)
+                    for (var stylist in stylists)
+                      Text(
+                        stylist.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontSize: 19),
+                      ),
+                ],
+              ),
+              if (stylists == null) const AddStylist(),
+              if (image == 'null')
+                Column(
+                  children: [
+                    const Text('Let\'s upload Image'),
+                    const SizedBox(height: 20),
+                    MaterialButton(
+                      color: Colors.pink,
+                      elevation: 8,
+                      highlightElevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      textColor: Colors.white,
+                      child: const Text("Select Photo"),
+                      onPressed: () {
+                        startWebFilePicker();
+                      },
+                    ),
+                    const Divider(
+                      color: Colors.teal,
+                    ),
+                    _bytesData != null
+                        ? Image.memory(_bytesData!, width: 400, height: 400)
+                        : Container(),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await uploadFile();
+                      },
+                      child: const Text('Upload Photo'),
+                    ),
+                  ],
+                )
+              else
+                SizedBox(
+                  height: 400,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                    ),
+                    child: HtmlWidget("<img src=$image>"),
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );
