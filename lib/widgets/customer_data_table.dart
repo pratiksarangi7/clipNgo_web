@@ -154,20 +154,16 @@ class _CustomerDataTableState extends ConsumerState<CustomerDataTable> {
                                     .get(),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
-                                    final documents = snapshot.data!.docs;
-
-                                    final matchingDocument =
-                                        documents.firstWhere((document) {
-                                      return document.id == booking['user-id'];
+                                    final phoneUidDocs = snapshot.data!.docs;
+                                    final bookingId = booking['user-id'];
+                                    final phoneUidDoc =
+                                        phoneUidDocs.firstWhere((doc) {
+                                      final data =
+                                          doc.data() as Map<String, dynamic>;
+                                      return data[doc.id] == bookingId;
                                     });
-                                    if (matchingDocument.exists) {
-                                      final phoneNumber =
-                                          matchingDocument[matchingDocument.id];
-                                      return Text(phoneNumber);
-                                    } else {
-                                      return const Text(
-                                          'Phone number not found');
-                                    }
+                                    final phoneNum = phoneUidDoc.id;
+                                    return Text(phoneNum);
                                   } else {
                                     return const Text('Loading...');
                                   }
