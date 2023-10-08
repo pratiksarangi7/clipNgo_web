@@ -12,6 +12,24 @@ class Customer {
     required this.serviceCharge,
     required this.optedServices,
   });
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(
+      name: json['name'],
+      phoneNumber: json['phoneNumber'],
+      assignedStylist: json['assignedStylist'],
+      optedServices: json['optedServices'],
+      serviceCharge: json['serviceCharge'],
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'phoneNumber': phoneNumber,
+      'assignedStylist': assignedStylist,
+      'optedServices': optedServices,
+      'serviceCharge': serviceCharge,
+    };
+  }
 }
 
 List<Customer> customers = [

@@ -54,7 +54,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
             'address': _addressController.text.trim(),
             'latitude': _latitude.toString(),
             'longitude': _longitude.toString(),
-            'id': const Uuid().v4(),
+            'id': documentId,
             'nameLower': _salonNameController.text.trim().toLowerCase(),
             // add any other data you want to store in the document
           })

@@ -1,6 +1,8 @@
 import 'package:clipngo_web/data/customer_data.dart';
+import 'package:clipngo_web/providers/salon_id_provider.dart';
 import 'package:clipngo_web/providers/selected_stylist_provider.dart';
 import 'package:clipngo_web/widgets/select_stylist.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:clipngo_web/widgets/opted_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +21,7 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
   final _textFieldController1 = TextEditingController();
   final _textFieldController2 = TextEditingController();
   final _textFieldController3 = TextEditingController();
+  bool isSaving = false;
 
   @override
   void dispose() {
@@ -28,32 +31,73 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
     super.dispose();
   }
 
-  void _saveData() {
-    String optedServices0 = "";
-    final optedServicesList = ref.read(selectedServicesProvider);
-    final totalCost = ref.read(totalCostProvider);
-    for (final service in optedServicesList) {
-      optedServices0 += "$service\n";
-    }
-    // Retrieve the entered data from the text fields
+  final uniqueIDProvider = FutureProvider.autoDispose<String>((ref) async {
+    final documentId = ref.read(idProvider);
+    final snapshot = await FirebaseFirestore.instance
+        .collection('email-salons')
+        .doc(documentId)
+        .get();
+    return snapshot.id;
+  });
+  Future<void> _saveData() async {
     String customerName = _textFieldController1.text;
     String phNo = _textFieldController2.text;
     double discountAmount = double.tryParse(_textFieldController3.text) ?? 0.0;
     String stylistName = ref.read(stylistProvider);
-    String optedServices = optedServices0;
-    // print(totalCost);
+    final optedServicesList = ref.read(selectedServicesProvider);
+    final totalCost = ref.read(totalCostProvider);
+    // String optedServices = optedServices0;
     String serviceCharge = (totalCost - discountAmount).toString();
 
-    var newCustomer = Customer(
-      name: customerName,
-      phoneNumber: phNo,
-      assignedStylist: stylistName,
-      optedServices: optedServices,
-      serviceCharge: serviceCharge,
-    );
-    setState(() {
-      customers.add(newCustomer);
+    final snapshot = await FirebaseFirestore.instance
+        .collection('email-salons')
+        .doc(ref.read(idProvider))
+        .get();
+
+    final salonName = snapshot.data()!['salon-name'] as String;
+    String optedServices0 = "";
+    for (final service in optedServicesList) {
+      optedServices0 += "$service\n";
+    }
+    // Retrieve the entered data from the text fields
+
+    final snapshotPhoneUid = await FirebaseFirestore.instance
+        .collection('phone-uid')
+        .doc(phNo)
+        .get();
+    final userId = snapshotPhoneUid[phNo] as String;
+    // var newCustomer = Customer(
+    //   name: customerName,
+    //   phoneNumber: phNo,
+    //   assignedStylist: stylistName,
+    //   optedServices: optedServices,
+    //   serviceCharge: serviceCharge,
+    // );
+
+    final uniqueID = await ref.read(uniqueIDProvider.future);
+
+    final docRef =
+        FirebaseFirestore.instance.collection('current-bookings').doc(uniqueID);
+
+    final docSnapshot = await docRef.get();
+
+    final customerList =
+        docSnapshot.exists ? docSnapshot.data()![uniqueID] ?? [] : [];
+
+    customerList.add({
+      "date-time": DateTime.now(),
+      'price': totalCost,
+      'user-id': userId,
+      'salon-id': uniqueID,
+      'services': optedServicesList,
+      'status': 'pending',
+      'salon-name': salonName,
     });
+
+    await docRef.set({
+      uniqueID: customerList,
+    }, SetOptions(merge: true));
+
     // Close the dialog
     Navigator.of(context).pop();
     _textFieldController1.clear();
@@ -125,8 +169,18 @@ class _AddCustomerState extends ConsumerState<AddCustomer> {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: _saveData,
-              child: const Text('Save'),
+              onPressed: () async {
+                setState(() {
+                  isSaving = true;
+                });
+                await _saveData();
+                setState(() {
+                  isSaving = false;
+                });
+              },
+              child: isSaving
+                  ? const CircularProgressIndicator()
+                  : const Text('save'),
             ),
           ],
         );
