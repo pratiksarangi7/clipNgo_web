@@ -53,11 +53,11 @@ class _MapScreenState extends State<MapScreen> {
         children: [
           TileLayer(
             urlTemplate:
-                'https://api.mapbox.com/styles/v1/bytebuilders/clllthx6501f601phhv8s1f2w/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYnl0ZWJ1aWxkZXJzIiwiYSI6ImNsbGtwdDI4cTB5c2czZnBheWRvc21yczEifQ.fbPEIx1XlNGrznz-pC6wng',
+                '<insert yours here>',
             userAgentPackageName: 'com.example.app',
             additionalOptions: const {
               'accessToken':
-                  'pk.eyJ1IjoiYnl0ZWJ1aWxkZXJzIiwiYSI6ImNsbGtwdDI4cTB5c2czZnBheWRvc21yczEifQ.fbPEIx1XlNGrznz-pC6wng',
+                  '<insert yours here>',
               'id': 'mapbox.mapbox-streets-v8',
             },
           ),
